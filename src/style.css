@@ -10,7 +10,5 @@ body {
 }
 
 canvas {
-  display: block;
-  margin: 0 auto;
-  background-color: #fff;
+  background-color: #e6eaca;
 }
