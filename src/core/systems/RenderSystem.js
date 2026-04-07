@@ -6,11 +6,12 @@ export class RenderSystem {
     this.ctx = canvas.getContext("2d");
     this.ctx.imageSmoothingEnabled = false;
   }
-  render() {
+  render(player) {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.fillStyle = "#270330";
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.renderGrid();
+    this.renderPlayer(player);
   }
 
   renderGrid() {
@@ -28,5 +29,9 @@ export class RenderSystem {
       this.ctx.lineTo(this.canvas.width, i);
       this.ctx.stroke();
     }
+  }
+  renderPlayer(player) {
+    this.ctx.fillStyle = "blue";
+    this.ctx.fillRect(player.x, player.y, player.width, player.height);
   }
 }
