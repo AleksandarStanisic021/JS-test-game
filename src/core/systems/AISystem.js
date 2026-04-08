@@ -1,6 +1,6 @@
 export class AISystem {
   constructor() {
-    this.speed = 3;
+    this.speed = 1.5; // Reduced from 3 to make game easier
   }
 
   update(enemy, player) {
