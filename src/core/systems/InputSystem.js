@@ -1,5 +1,6 @@
 export class InputSystem {
-  constructor() {
+  constructor(game) {
+    this.game = game;
     this.keys = {
       ArrowUp: false,
       ArrowDown: false,
@@ -17,6 +18,7 @@ export class InputSystem {
   init() {
     window.addEventListener("keydown", (e) => this.handleKeyDown(e));
     window.addEventListener("keyup", (e) => this.handleKeyUp(e));
+    window.addEventListener("click", (e) => this.handleClick(e));
   }
 
   handleKeyDown(event) {
@@ -64,6 +66,17 @@ export class InputSystem {
     if (this.isMovingRight()) {
       player.x += this.speed;
     }
+  }
+
+  handleClick(event) {
+    if (this.game.gameOver) {
+      this.game.restart();
+      return;
+    }
+    const rect = this.game.canvas.getBoundingClientRect();
+    const clickX = event.clientX - rect.left;
+    const clickY = event.clientY - rect.top;
+    this.game.createMissile(clickX, clickY);
   }
 
   setSpeed(speed) {

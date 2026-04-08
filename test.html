@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Simple Test</title>
+  </head>
+  <body>
+    <h1>Testing JavaScript</h1>
+    <div id="output"></div>
+
+    <script>
+      console.log("Basic JavaScript works!");
+      document.getElementById("output").textContent = "JavaScript is working!";
+
+      // Test Web Audio API
+      try {
+        const audioContext = new (
+          window.AudioContext || window.webkitAudioContext
+        )();
+        console.log("Web Audio API works!");
+        document.getElementById("output").textContent +=
+          " Web Audio API works!";
+      } catch (e) {
+        console.error("Web Audio API failed:", e);
+        document.getElementById("output").textContent +=
+          " Web Audio API failed!";
+      }
+
+      // Test Canvas
+      const canvas = document.createElement("canvas");
+      canvas.width = 100;
+      canvas.height = 100;
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "red";
+      ctx.fillRect(0, 0, 50, 50);
+      document.body.appendChild(canvas);
+      console.log("Canvas works!");
+      document.getElementById("output").textContent += " Canvas works!";
+    </script>
+  </body>
+</html>

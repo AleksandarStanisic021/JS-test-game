@@ -1,0 +1,54 @@
+// Simple test without ES6 modules console.log("🎮 Starting simple game
+test..."); // Create canvas const canvas = document.createElement("canvas");
+canvas.width = 800; canvas.height = 600; canvas.style.border = "1px solid
+black"; document.body.appendChild(canvas); const ctx = canvas.getContext("2d");
+// Simple colored squares function createColoredSquare(color, width, height) {
+const canvas = document.createElement('canvas'); canvas.width = width;
+canvas.height = height; const ctx = canvas.getContext('2d'); ctx.fillStyle =
+color; ctx.fillRect(0, 0, width, height); ctx.strokeStyle = '#000000';
+ctx.lineWidth = 2; ctx.strokeRect(0, 0, width, height); return canvas; } //
+Create assets const playerSprite = createColoredSquare('#00ff00', 64, 64); const
+enemySprites = [ createColoredSquare('#ff0000', 64, 64),
+createColoredSquare('#0000ff', 64, 64), createColoredSquare('#ffff00', 64, 64),
+]; // Game state let player = { x: 400, y: 300, sprite: playerSprite }; let
+enemies = []; let score = 0; // Simple sound using Web Audio API function
+playSound(frequency, type, duration) { try { const audioContext = new
+(window.AudioContext || window.webkitAudioContext)(); const oscillator =
+audioContext.createOscillator(); const gainNode = audioContext.createGain();
+oscillator.connect(gainNode); gainNode.connect(audioContext.destination);
+oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+oscillator.type = type; gainNode.gain.setValueAtTime(0.1,
+audioContext.currentTime); gainNode.gain.exponentialRampToValueAtTime(0.01,
+audioContext.currentTime + duration);
+oscillator.start(audioContext.currentTime);
+oscillator.stop(audioContext.currentTime + duration); } catch (e) {
+console.warn("Sound failed:", e); } } // Spawn enemy function spawnEnemy() {
+const enemy = { x: Math.random() * (canvas.width - 64), y: Math.random() *
+(canvas.height - 64), sprite: enemySprites[Math.floor(Math.random() *
+enemySprites.length)] }; enemies.push(enemy); } // Game loop function gameLoop()
+{ // Clear canvas ctx.fillStyle = "#270330"; ctx.fillRect(0, 0, canvas.width,
+canvas.height); // Draw grid ctx.strokeStyle = "#3a0e5c"; ctx.lineWidth = 2; for
+(let i = 0; i < canvas.width; i += 40) { ctx.beginPath(); ctx.moveTo(i, 0);
+ctx.lineTo(i, canvas.height); ctx.stroke(); } for (let i = 0; i < canvas.height;
+i += 40) { ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i);
+ctx.stroke(); } // Draw player ctx.drawImage(player.sprite, player.x, player.y);
+// Draw enemies enemies.forEach(enemy => { ctx.drawImage(enemy.sprite, enemy.x,
+enemy.y); }); // Draw score ctx.fillStyle = "#00ff00"; ctx.font = "24px Arial";
+ctx.fillText("Score: " + score, 20, 40); requestAnimationFrame(gameLoop); } //
+Input handling canvas.addEventListener('click', (event) => { const rect =
+canvas.getBoundingClientRect(); const clickX = event.clientX - rect.left; const
+clickY = event.clientY - rect.top; console.log("Click at:", clickX, clickY);
+playSound(800, 'square', 0.1); // Shoot sound // Check if click hits enemy for
+(let i = enemies.length - 1; i >= 0; i--) { const enemy = enemies[i]; if (clickX
+>= enemy.x && clickX <= enemy.x + 64 && clickY >= enemy.y && clickY <= enemy.y +
+64) { enemies.splice(i, 1); score += 10; playSound(200, 'sawtooth', 0.3); //
+Death sound console.log("Enemy hit! Score:", score); break; } } }); // Keyboard
+movement document.addEventListener('keydown', (event) => { const speed = 5;
+switch(event.key) { case 'ArrowUp': case 'w': player.y -= speed; break; case
+'ArrowDown': case 's': player.y += speed; break; case 'ArrowLeft': case 'a':
+player.x -= speed; break; case 'ArrowRight': case 'd': player.x += speed; break;
+} }); // Spawn enemies periodically setInterval(spawnEnemy, 2000); // Start game
+console.log("🎮 Simple game started!"); console.log("✅ You should see a green
+player square"); console.log("✅ Click on enemies to destroy them");
+console.log("✅ Use WASD or arrow keys to move"); console.log("✅ You should
+hear sounds when clicking"); gameLoop();
