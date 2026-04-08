@@ -1,10 +1,12 @@
 import { RenderSystem } from "./systems/RenderSystem";
+import { InputSystem } from "./systems/InputSystem";
 import { Player } from "./Entities/Player";
 export class Game {
   constructor() {
     this.canvas = document.createElement("canvas");
     //this.ctx = this.canvas.getContext("2d");
     this.renderSystem = new RenderSystem(this.canvas);
+    this.inputSystem = new InputSystem();
     this.player = new Player();
     this.init();
   }
@@ -19,6 +21,7 @@ export class Game {
     this.canvas.height = window.innerHeight - 20;
   }
   gameLoop(timestamp) {
+    this.inputSystem.update(this.player);
     this.renderSystem.render(this.player);
     requestAnimationFrame((t) => this.gameLoop(t));
   }
